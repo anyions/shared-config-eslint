@@ -1,0 +1,103 @@
+{
+  "name": "@anyions/shared-eslint-config",
+  "type": "module",
+  "version": "1.0.0",
+  "description": "AnyIons' shared eslint config presets with prettier",
+  "author": {
+    "name": "AnyIons",
+    "email": "anyions@hotmail.com",
+    "url": "https://github.com/anyions"
+  },
+  "license": "MIT",
+  "homepage": "https://github.com/anyions/shared-eslint-config",
+  "repository": {
+    "url": "https://github.com/anyions/shared-eslint-config.git"
+  },
+  "bugs": {
+    "url": "https://github.com/anyions/shared-eslint-config/issues"
+  },
+  "keywords": [
+    "eslint",
+    "eslint-config",
+    "eslint-config-vue",
+    "eslint-config-typescript",
+    "prettier"
+  ],
+  "publishConfig": {
+    "access": "public",
+    "registry": "https://registry.npmjs.org/"
+  },
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js",
+      "require": "./dist/index.cjs"
+    }
+  },
+  "main": "dist/index.cjs",
+  "module": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "files": ["dist"],
+  "engines": {
+    "node": ">=14"
+  },
+  "scripts": {
+    "build": "tsup --format esm,cjs --clean --dts",
+    "clean": "pnpm rimraf node_modules dist",
+    "lint": "pnpm eslint .",
+    "lint:fix": "eslint . --cache --max-warnings 0 --fix",
+    "publish": "bumpp && npm -r publish --access=public",
+    "typecheck": "tsc --noEmit --skipLibCheck"
+  },
+  "peerDependencies": {
+    "@typescript-eslint/eslint-plugin": "7.8.0",
+    "@typescript-eslint/parser": "7.8.0",
+    "@unocss/eslint-config": "^0.59.4",
+    "eslint": "9.2.0",
+    "eslint-config-flat-gitignore": "^0.1.5",
+    "eslint-config-prettier": "9.1.0",
+    "eslint-flat-config-utils": "^0.2.4",
+    "eslint-plugin-eslint-comments": "^3.2.0",
+    "eslint-plugin-import-x": "0.5.0",
+    "eslint-plugin-n": "17.4.0",
+    "eslint-plugin-perfectionist": "^2.10.0",
+    "eslint-plugin-prettier": "5.1.3",
+    "eslint-plugin-unicorn": "52.0.0",
+    "eslint-plugin-unused-imports": "^3.2.0",
+    "eslint-plugin-vue": "^9.25.0",
+    "globals": "15.1.0",
+    "prettier": "^3.2.5",
+    "prettier-plugin-json-sort": "^0.0.2",
+    "vue-eslint-parser": "9.4.2"
+  },
+  "dependencies": {
+    "@typescript-eslint/eslint-plugin": "7.8.0",
+    "@typescript-eslint/parser": "7.8.0",
+    "@unocss/eslint-config": "^0.59.4",
+    "eslint-config-flat-gitignore": "^0.1.5",
+    "eslint-config-prettier": "9.1.0",
+    "eslint-flat-config-utils": "^0.2.4",
+    "eslint-plugin-eslint-comments": "^3.2.0",
+    "eslint-plugin-import-x": "0.5.0",
+    "eslint-plugin-n": "17.4.0",
+    "eslint-plugin-perfectionist": "^2.10.0",
+    "eslint-plugin-prettier": "5.1.3",
+    "eslint-plugin-unicorn": "52.0.0",
+    "eslint-plugin-unused-imports": "^3.2.0",
+    "eslint-plugin-vue": "^9.25.0",
+    "globals": "15.1.0",
+    "prettier-plugin-json-sort": "^0.0.2",
+    "vue-eslint-parser": "9.4.2"
+  },
+  "devDependencies": {
+    "@types/eslint": "8.56.10",
+    "@types/eslint-config-prettier": "6.11.3",
+    "@types/node": "20.12.10",
+    "bumpp": "^9.4.1",
+    "eslint": "9.2.0",
+    "prettier": "^3.2.5",
+    "rimraf": "^5.0.5",
+    "tsup": "8.0.2",
+    "typescript": "5.4.5"
+  }
+}
