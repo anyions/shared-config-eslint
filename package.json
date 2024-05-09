@@ -43,10 +43,10 @@
   },
   "scripts": {
     "build": "tsup --format esm,cjs --clean --dts",
+    "bump": "bumpp && npm -r publish --access=public",
     "clean": "pnpm rimraf node_modules dist",
     "lint": "pnpm eslint .",
     "lint:fix": "eslint . --cache --max-warnings 0 --fix",
-    "publish": "bumpp && npm -r publish --access=public",
     "typecheck": "tsc --noEmit --skipLibCheck"
   },
   "peerDependencies": {
