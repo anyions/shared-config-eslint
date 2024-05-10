@@ -1,9 +1,9 @@
-import { composer, interopDefault } from '../shared'
-import type { FlatConfigComposer, FlatConfigItem } from '../types'
+import { interopDefault } from '../shared'
+import type { FlatConfigItem } from '../types'
 
 import { createTsRules } from './typescript'
 
-export async function createVueConfig(): Promise<FlatConfigComposer> {
+export async function createVueConfig(): Promise<FlatConfigItem[]> {
   const [pluginVue, parserVue, pluginTs, parserTs] = await Promise.all([
     interopDefault(import('eslint-plugin-vue')),
     interopDefault(import('vue-eslint-parser')),
@@ -13,7 +13,7 @@ export async function createVueConfig(): Promise<FlatConfigComposer> {
 
   const tsRules = await createTsRules()
 
-  const configs: FlatConfigItem[] = [
+  return [
     {
       name: '@anyions/shared-eslint-config/vue/rules',
       languageOptions: {
@@ -126,6 +126,4 @@ export async function createVueConfig(): Promise<FlatConfigComposer> {
       }
     }
   ]
-
-  return composer(configs)
 }

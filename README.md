@@ -42,8 +42,7 @@ export default defineConfig(
 );
 ```
 
-> [!NOTE]
-> See [Options](#options) for more details.
+> [!NOTE] See [Options](#options) for more details.
 
 ### ESLint settings in VSCode
 
@@ -63,6 +62,7 @@ export default defineConfig(
     "css",
     "json",
     "jsonc",
+    "json5",
     "markdown",
     "yaml",
     "yml"
@@ -120,7 +120,7 @@ interface UserOptions {
    * }
    * ```
    */
-  prettierRules: PrettierOptions;
+  prettierRules: PrettierRules;
   /**
    * Whether to use prettierrc
    *

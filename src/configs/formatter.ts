@@ -7,16 +7,16 @@ import {
   GLOB_LESS,
   GLOB_MARKDOWN,
   GLOB_POSTCSS,
+  GLOB_PRETTIER_LINTS,
   GLOB_SCSS,
   GLOB_YAML
-} from '../glob'
-import { composer, interopDefault } from '../shared'
-import type { FlatConfigComposer, FlatConfigItem, PrettierOptions, PrettierParser, UserOptions } from '../types'
+} from '../globs'
+import { interopDefault } from '../shared'
+import type { FlatConfigItem, PrettierParser, PrettierRules, UserOptions } from '../types'
 
 const parserPlain = {
   meta: {
-    name: 'eslint-parser-plain',
-    version: '1.0.0'
+    name: 'eslint-parser-plain'
   },
   parseForESLint: (code: string) => ({
     ast: {
@@ -36,16 +36,18 @@ const parserPlain = {
 }
 
 export async function createFormatterConfig(
-  options?: UserOptions['formatter'],
-  prettierOptions: PrettierOptions = {}
-): Promise<FlatConfigComposer> {
-  const { html = true, css = true, json = true, markdown = true, yaml = false } = options || {}
+  formatters?: UserOptions['formatter'],
+  prettierRules: PrettierRules = {}
+): Promise<FlatConfigItem[]> {
+  const { html = true, css = true, json = true, markdown = true, yaml = false } = formatters || {}
 
   const pluginPrettier = await interopDefault(import('eslint-plugin-prettier'))
+  const recommendedPrettier = await interopDefault(import('eslint-plugin-prettier/recommended'))
 
   function createPrettierFormatter(files: string[], parser: PrettierParser, plugins?: string[]) {
-    const rules: PrettierOptions = {
-      ...prettierOptions,
+    const rules: PrettierRules = {
+      ...prettierRules,
+      ...(parser === 'markdown' ? { embeddedLanguageFormatting: 'off' } : {}),
       parser
     }
 
@@ -70,7 +72,22 @@ export async function createFormatterConfig(
     return config
   }
 
-  const configs: FlatConfigItem[] = []
+  const configs: FlatConfigItem[] = [
+    recommendedPrettier,
+    {
+      name: '@anyions/shared-eslint-config/prettier/rules',
+      files: GLOB_PRETTIER_LINTS,
+      plugins: {
+        prettier: pluginPrettier
+      },
+      rules: {
+        'prettier/prettier': ['warn', prettierRules],
+
+        'arrow-body-style': 'off',
+        'prefer-arrow-callback': 'off'
+      }
+    }
+  ]
 
   if (css) {
     const cssConfig = createPrettierFormatter([GLOB_CSS, GLOB_POSTCSS], 'css')
@@ -86,7 +103,7 @@ export async function createFormatterConfig(
   }
 
   if (json) {
-    const jsonConfig = createPrettierFormatter([GLOB_JSON, GLOB_JSONC], 'json', ['prettier-plugin-json-sort'])
+    const jsonConfig = createPrettierFormatter([GLOB_JSON, GLOB_JSONC], 'json')
     const json5Config = createPrettierFormatter([GLOB_JSON5], 'json5')
     configs.push(jsonConfig, json5Config)
   }
@@ -101,5 +118,5 @@ export async function createFormatterConfig(
     configs.push(yamlConfig)
   }
 
-  return composer(configs)
+  return configs
 }

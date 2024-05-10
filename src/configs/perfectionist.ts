@@ -1,10 +1,10 @@
-import { composer, interopDefault } from '../shared'
-import type { FlatConfigComposer, FlatConfigItem } from '../types'
+import { interopDefault } from '../shared'
+import type { FlatConfigItem } from '../types'
 
-export async function createPerfectionistConfig(): Promise<FlatConfigComposer> {
+export async function createPerfectionistConfig(): Promise<FlatConfigItem[]> {
   const pluginPerfectionist = await interopDefault(import('eslint-plugin-perfectionist'))
 
-  const configs: FlatConfigItem[] = [
+  return [
     {
       name: '@anyions/shared-eslint-config/perfectionist/rules',
       plugins: {
@@ -12,6 +12,4 @@ export async function createPerfectionistConfig(): Promise<FlatConfigComposer> {
       }
     }
   ]
-
-  return composer(configs)
 }

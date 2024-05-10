@@ -1,11 +1,12 @@
-import { composer, interopDefault } from '../shared'
-import type { FlatConfigComposer, FlatConfigItem } from '../types'
+import { GLOB_SRC_EXT } from '../globs'
+import { interopDefault } from '../shared'
+import type { FlatConfigItem } from '../types'
 
-export async function createImportsConfig(): Promise<FlatConfigComposer> {
+export async function createImportsConfig(): Promise<FlatConfigItem[]> {
   const pluginImport = await interopDefault(import('eslint-plugin-import-x'))
   const pluginUnusedImports = await interopDefault(import('eslint-plugin-unused-imports'))
 
-  const configs: FlatConfigItem[] = [
+  return [
     {
       name: `@anyions/shared-eslint-config/imports/rules`,
       plugins: {
@@ -25,6 +26,11 @@ export async function createImportsConfig(): Promise<FlatConfigComposer> {
           {
             groups: ['builtin', 'external', 'internal', 'parent', 'sibling', 'index', 'object'],
             pathGroups: [
+              {
+                group: 'builtin',
+                pattern: '{node:}**',
+                position: 'before'
+              },
               {
                 group: 'internal',
                 pattern: '{{@,~}/,#}**',
@@ -52,8 +58,14 @@ export async function createImportsConfig(): Promise<FlatConfigComposer> {
           }
         ]
       }
+    },
+    {
+      name: '@anyions/shared-eslint-config/imports/disables/bin',
+      files: ['**/bin/**/*', `**/bin.${GLOB_SRC_EXT}`],
+      rules: {
+        'antfu/no-import-dist': 'off',
+        'antfu/no-import-node-modules-by-path': 'off'
+      }
     }
   ]
-
-  return composer(configs)
 }

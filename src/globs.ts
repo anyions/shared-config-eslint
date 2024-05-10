@@ -8,8 +8,6 @@ export const GLOB_TS = '**/*.?([cm])ts'
 export const GLOB_TSX = '**/*.?([cm])tsx'
 
 export const GLOB_VUE = '**/*.vue'
-export const GLOB_ASTRO = '**/*.astro'
-export const GLOB_SVELTE = '**/*.svelte'
 
 export const GLOB_HTML = '**/*.htm?(l)'
 
@@ -26,9 +24,8 @@ export const GLOB_JSONC = '**/*.jsonc'
 export const GLOB_MARKDOWN = '**/*.md'
 export const GLOB_MARKDOWN_IN_MARKDOWN = '**/*.md/*.md'
 export const GLOB_YAML = '**/*.y?(a)ml'
-export const GLOB_TOML = '**/*.toml'
 
-export const GLOB_PRETTIER_LINT = [GLOB_SRC, GLOB_VUE]
+export const GLOB_PRETTIER_LINTS = [GLOB_SRC, GLOB_VUE]
 
 export const GLOB_PACKAGE_JSON = '**/package.json'
 
@@ -43,7 +40,7 @@ export const GLOB_TESTS = [
   `**/*.benchmark.${GLOB_SRC_EXT}`
 ]
 
-export const GLOB_EXCLUDE = [
+export const GLOB_EXCLUDES = [
   '**/node_modules',
   '**/dist',
 

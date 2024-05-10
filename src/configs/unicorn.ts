@@ -1,10 +1,10 @@
-import { composer, interopDefault } from '../shared'
-import type { FlatConfigComposer, FlatConfigItem } from '../types'
+import { interopDefault } from '../shared'
+import type { FlatConfigItem } from '../types'
 
-export async function createUnicornConfig(): Promise<FlatConfigComposer> {
+export async function createUnicornConfig(): Promise<FlatConfigItem[]> {
   const pluginUnicorn = await interopDefault(import('eslint-plugin-unicorn'))
 
-  const configs: FlatConfigItem[] = [
+  return [
     {
       name: '@anyions/shared-eslint-config/unicorn/rules',
       plugins: {
@@ -27,6 +27,4 @@ export async function createUnicornConfig(): Promise<FlatConfigComposer> {
       }
     }
   ]
-
-  return composer(configs)
 }

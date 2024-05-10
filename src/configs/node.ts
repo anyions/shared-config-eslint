@@ -1,10 +1,10 @@
-import { composer, interopDefault } from '../shared'
-import type { FlatConfigComposer, FlatConfigItem } from '../types'
+import { interopDefault } from '../shared'
+import type { FlatConfigItem } from '../types'
 
-export async function createNodeConfig(): Promise<FlatConfigComposer> {
+export async function createNodeConfig(): Promise<FlatConfigItem[]> {
   const pluginNode = await interopDefault(import('eslint-plugin-n'))
 
-  const configs: FlatConfigItem[] = [
+  return [
     {
       name: `@anyions/shared-eslint-config/node/rules`,
       plugins: {
@@ -22,6 +22,4 @@ export async function createNodeConfig(): Promise<FlatConfigComposer> {
       }
     }
   ]
-
-  return composer(configs)
 }

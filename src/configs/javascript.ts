@@ -1,13 +1,13 @@
 import globals from 'globals'
 
-import { GLOB_TESTS } from '../glob'
-import { composer, interopDefault } from '../shared'
-import type { FlatConfigComposer, FlatConfigItem } from '../types'
+import { GLOB_SRC, GLOB_SRC_EXT, GLOB_TESTS } from '../globs'
+import { interopDefault } from '../shared'
+import type { FlatConfigItem } from '../types'
 
-export async function createJavascriptConfig(): Promise<FlatConfigComposer> {
+export async function createJavascriptConfig(): Promise<FlatConfigItem[]> {
   const pluginUnusedImports = await interopDefault(import('eslint-plugin-unused-imports'))
 
-  const configs: FlatConfigItem[] = [
+  return [
     {
       name: `@anyions/shared-eslint-config/javascript/rules`,
       languageOptions: {
@@ -237,6 +237,13 @@ export async function createJavascriptConfig(): Promise<FlatConfigComposer> {
       }
     },
     {
+      files: [`scripts/${GLOB_SRC}`, `cli.${GLOB_SRC_EXT}`],
+      name: '@anyions/shared-eslint-config/javascript/disables/cli',
+      rules: {
+        'no-console': 'off'
+      }
+    },
+    {
       name: `@anyions/shared-eslint-config/javascript/disables/test`,
       files: GLOB_TESTS,
       rules: {
@@ -244,6 +251,4 @@ export async function createJavascriptConfig(): Promise<FlatConfigComposer> {
       }
     }
   ]
-
-  return composer(configs)
 }

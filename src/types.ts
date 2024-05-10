@@ -1,6 +1,6 @@
 import type { ESLint, Linter } from 'eslint'
 
-interface PrettierOptionsRequired {
+interface PrettierRulessRequired {
   /**
    * Specify the line length that the printer will wrap on.
    * @default 120
@@ -125,7 +125,7 @@ export type LiteralUnion<T extends U, U = string> = T | (Pick<U, never> & { _?: 
 
 export type FlatConfigParserModule = Linter.FlatConfigParserModule
 
-export interface PrettierOptions extends Partial<PrettierOptionsRequired> {
+export interface PrettierRules extends Partial<PrettierRulessRequired> {
   parser?: LiteralUnion<PrettierParser>
 }
 
@@ -151,14 +151,24 @@ export interface UserOptions {
    * ```json
    * {
    *   "printWidth": 120,
+   *   "tabWidth": 2,
+   *   "useTabs": false,
+   *   "semi": false,
+   *   "vueIndentScriptAndStyle": true,
    *   "singleQuote": true,
+   *   "quoteProps": "as-needed",
+   *   "bracketSpacing": true,
    *   "trailingComma": "none",
-   *   "arrowParens": "avoid",
-   *   "htmlWhitespaceSensitivity": "ignore"
+   *   "jsxSingleQuote": true,
+   *   "arrowParens": "always",
+   *   "proseWrap": "never",
+   *   "htmlWhitespaceSensitivity": "strict",
+   *   "endOfLine": "lf",
+   *   "rangeStart": 0
    * }
    * ```
    */
-  prettierRules: PrettierOptions
+  prettierRules: PrettierRules
   /**
    * Whether to use prettierrc
    *

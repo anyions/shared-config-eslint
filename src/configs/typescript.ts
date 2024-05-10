@@ -1,6 +1,6 @@
-import { GLOB_TS, GLOB_TSX } from '../glob'
-import { composer, interopDefault, renamePluginsInRules } from '../shared'
-import type { FlatConfigComposer, FlatConfigItem } from '../types'
+import { GLOB_TS, GLOB_TSX } from '../globs'
+import { interopDefault, renameRules } from '../shared'
+import type { FlatConfigItem } from '../types'
 
 export async function createTsRules(): Promise<FlatConfigItem['rules']> {
   const pluginTs = await interopDefault(import('@typescript-eslint/eslint-plugin'))
@@ -38,16 +38,16 @@ export async function createTsRules(): Promise<FlatConfigItem['rules']> {
     ]
   }
 
-  return renamePluginsInRules(tsRules, { '@typescript-eslint': 'ts' })
+  return renameRules(tsRules, { '@typescript-eslint': 'ts' })
 }
 
-export async function createTypescriptConfig(): Promise<FlatConfigComposer> {
+export async function createTypescriptConfig(): Promise<FlatConfigItem[]> {
   const pluginTs = await interopDefault(import('@typescript-eslint/eslint-plugin'))
   const parserTs = await interopDefault(import('@typescript-eslint/parser'))
 
   const tsRules = await createTsRules()
 
-  const configs: FlatConfigItem[] = [
+  return [
     {
       name: '@anyions/shared-eslint-config/typescript/rules',
       files: [GLOB_TS, GLOB_TSX],
@@ -83,6 +83,4 @@ export async function createTypescriptConfig(): Promise<FlatConfigComposer> {
       }
     }
   ]
-
-  return composer(configs)
 }
