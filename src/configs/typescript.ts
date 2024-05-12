@@ -1,6 +1,9 @@
-import { GLOB_TS, GLOB_TSX } from '../globs'
-import { interopDefault, renameRules } from '../shared'
-import type { FlatConfigItem } from '../types'
+import process from 'node:process'
+
+import { GLOB_SRC, GLOB_TS, GLOB_TSX } from '../globs'
+import { interopDefault, renameRules, toArray } from '../shared'
+
+import type { FlatConfigItem, OptionsTypeScript } from '../types'
 
 export async function createTsRules(): Promise<FlatConfigItem['rules']> {
   const pluginTs = await interopDefault(import('@typescript-eslint/eslint-plugin'))
@@ -41,29 +44,98 @@ export async function createTsRules(): Promise<FlatConfigItem['rules']> {
   return renameRules(tsRules, { '@typescript-eslint': 'ts' })
 }
 
-export async function createTypescriptConfig(): Promise<FlatConfigItem[]> {
+export async function createTypescriptConfig(options: boolean | OptionsTypeScript = {}): Promise<FlatConfigItem[]> {
+  if (options === false) return []
+
+  const opts = options as OptionsTypeScript
+
+  const { componentExts = [], overrides = {}, parserOptions = {} } = opts
+  const files = opts.files ?? [GLOB_SRC, ...componentExts.map((ext) => `**/*.${ext}`)]
+  const filesTypeAware = opts.filesTypeAware ?? [GLOB_TS, GLOB_TSX]
+  const tsconfigPath = opts?.tsconfigPath ? toArray(opts.tsconfigPath) : undefined
+  const isTypeAware = !!tsconfigPath
+
   const pluginTs = await interopDefault(import('@typescript-eslint/eslint-plugin'))
   const parserTs = await interopDefault(import('@typescript-eslint/parser'))
 
+  const typeAwareRules: FlatConfigItem['rules'] = {
+    'dot-notation': 'off',
+
+    'no-implied-eval': 'off',
+    'no-throw-literal': 'off',
+
+    'ts/await-thenable': 'error',
+    'ts/dot-notation': ['error', { allowKeywords: true }],
+    'ts/no-floating-promises': 'error',
+    'ts/no-for-in-array': 'error',
+    'ts/no-implied-eval': 'error',
+    'ts/no-misused-promises': 'error',
+    'ts/no-throw-literal': 'error',
+    'ts/no-unnecessary-type-assertion': 'error',
+    'ts/no-unsafe-argument': 'error',
+    'ts/no-unsafe-assignment': 'error',
+    'ts/no-unsafe-call': 'error',
+    'ts/no-unsafe-member-access': 'error',
+    'ts/no-unsafe-return': 'error',
+    'ts/restrict-plus-operands': 'error',
+    'ts/restrict-template-expressions': 'error',
+    'ts/unbound-method': 'error'
+  }
+
   const tsRules = await createTsRules()
 
-  return [
-    {
-      name: '@anyions/shared-eslint-config/typescript/rules',
-      files: [GLOB_TS, GLOB_TSX],
+  function makeParser(typeAware: boolean, files: string[], ignores?: string[]): FlatConfigItem {
+    return {
+      name: `@anyions/shared-eslint-config/typescript/${typeAware ? 'type-aware-parser' : 'parser'}`,
+      files,
+      ...(ignores ? { ignores } : {}),
       languageOptions: {
         parser: parserTs,
         parserOptions: {
-          sourceType: 'module'
+          extraFileExtensions: componentExts.map((ext) => `.${ext}`),
+          sourceType: 'module',
+          ...(typeAware
+            ? {
+                project: tsconfigPath,
+                tsconfigRootDir: process.cwd()
+              }
+            : {}),
+          ...(parserOptions as any)
         }
-      },
+      }
+    }
+  }
+
+  return [
+    {
+      name: '@anyions/shared-eslint-config/typescript/core',
       plugins: {
         ts: pluginTs as any
-      },
-      rules: {
-        ...tsRules
       }
     },
+    ...(isTypeAware
+      ? [makeParser(true, filesTypeAware), makeParser(false, files, filesTypeAware)]
+      : [makeParser(false, files)]),
+    {
+      name: '@anyions/shared-eslint-config/typescript/rules',
+      files,
+      rules: {
+        ...tsRules,
+        ...overrides
+      }
+    },
+    ...(isTypeAware
+      ? [
+          {
+            name: '@anyions/shared-eslint-config/typescript/type-aware/rules',
+            files: filesTypeAware,
+            rules: {
+              ...(tsconfigPath ? typeAwareRules : {}),
+              ...overrides
+            }
+          }
+        ]
+      : []),
     {
       name: '@anyions/shared-eslint-config/typescript/disables/dts',
       files: ['**/*.d.ts'],

@@ -24,7 +24,7 @@ npm i @anyions/shared-eslint-config
 - Import config from `@anyions/shared-eslint-config`
 
 ```js
-import { defineConfig } from "@anyions/eslint-config";
+import { defineConfig } from '@anyions/eslint-config'
 
 export default defineConfig(
   {
@@ -33,16 +33,17 @@ export default defineConfig(
   // From the second arguments they are ESLint flat configs
   // you can have multiple configs
   {
-    files: ["**/*.ts"],
-    rules: {},
+    files: ['**/*.ts'],
+    rules: {}
   },
   {
-    rules: {},
-  },
-);
+    rules: {}
+  }
+)
 ```
 
-> [!NOTE] See [Options](#options) for more details.
+> [!NOTE]  
+> See [Options](#options) for more details.
 
 ### ESLint settings in VSCode
 
@@ -85,17 +86,7 @@ export default defineConfig(
 ## Options
 
 ````ts
-interface UserOptions {
-  /**
-   * The current working directory
-   *
-   * @default process.cwd()
-   */
-  cwd: string;
-  /** The globs to ignore lint */
-  ignores: string[];
-  /** The override rules */
-  overrides: FlatConfigItem["rules"];
+interface OptionsPrettier {
   /**
    * Default prettier rules
    *
@@ -120,15 +111,7 @@ interface UserOptions {
    * }
    * ```
    */
-  prettierRules: PrettierRules;
-  /**
-   * Whether to use prettierrc
-   *
-   * If true, the rules in prettierrc will override the default rules
-   *
-   * @default true
-   */
-  usePrettierrc: boolean;
+  rules: PrettierRules
   /**
    * @default
    * {
@@ -139,13 +122,120 @@ interface UserOptions {
    *  "yaml": false
    * }
    */
-  formatter: {
-    html?: boolean;
-    css?: boolean;
-    json?: boolean;
-    markdown?: boolean;
-    yaml?: false;
-  };
+  formatters: {
+    html?: boolean
+    css?: boolean
+    json?: boolean
+    markdown?: boolean
+    yaml?: false
+  }
+}
+
+export interface OptionsComponentExts {
+  /**
+   * Additional extensions for components.
+   *
+   * @example ['vue', 'ts']
+   * @default []
+   */
+  componentExts?: string[]
+}
+
+export interface OptionsOverrides {
+  files?: string[]
+  overrides?: FlatConfigItem['rules']
+}
+
+export interface OptionsMarkdown extends OptionsOverrides, OptionsComponentExts {}
+
+export interface OptionsTypeScript extends OptionsOverrides, OptionsComponentExts {
+  tsconfigPath?: string | string[]
+  parserOptions?: Partial<ParserOptions>
+  filesTypeAware?: string[]
+}
+
+export interface OptionsUnoCSS extends OptionsOverrides {
+  /**
+   * Enable attributify support.
+   * @default true
+   */
+  attributify?: boolean
+  /**
+   * Enable strict mode by throwing errors about blocklisted classes.
+   * @default false
+   */
+  strict?: boolean
+}
+
+export interface UserOptions {
+  /**
+   * The current working directory
+   *
+   * @default process.cwd()
+   */
+  cwd?: string
+  /**
+   * The globs to ignore lint
+   *
+   * @default []
+   */
+  ignores?: string[]
+  /**
+   * Enable flat git/eslint ignore support.
+   *
+   * Path to `.gitignore` files
+   * By defult, will use `'.gitignore'` and '.eslintignore' automation.
+   *
+   * @see https://github.com/antfu/eslint-config-flat-gitignore
+   *
+   * @default ['.gitignore', '.eslintignore']
+   */
+  flatignore?: string[]
+  /**
+   * Whether to use prettier to format files
+   * If true, will use default prettier options
+   * You can use `.prettierrc` to override the default prettier rules
+   *
+   * @see OptionsPrettier
+   * @default true
+   */
+  prettier?: boolean | OptionsPrettier
+  /**
+   * Javascript override rules.
+   */
+  javascript?: OptionsOverrides
+  /**
+   * Enable TypeScript support.
+   *
+   * @default auto-detect based on the dependencies
+   */
+  typescript?: boolean | OptionsTypeScript
+  /**
+   * Enable unocss rules.
+   *
+   * @default false
+   */
+  unocss?: boolean | OptionsUnoCSS
+  /**
+   * Enable Vue support.
+   *
+   * @default auto-detect based on the dependencies
+   */
+  vue?: boolean | OptionsOverrides
+  /**
+   * Enable linting for **code snippets** in Markdown.
+   *
+   * To format Markdown content, need enable `formatters.markdown`.
+   *
+   * @default true
+   */
+  markdown?: boolean | OptionsMarkdown
+  /**
+   * Enable JSONC support.
+   *
+   * @default true
+   */
+  jsonc?: boolean | OptionsOverrides
 }
 ````
 

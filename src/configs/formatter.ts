@@ -7,12 +7,11 @@ import {
   GLOB_LESS,
   GLOB_MARKDOWN,
   GLOB_POSTCSS,
-  GLOB_PRETTIER_LINTS,
-  GLOB_SCSS,
-  GLOB_YAML
+  GLOB_SCSS
 } from '../globs'
 import { interopDefault } from '../shared'
-import type { FlatConfigItem, PrettierParser, PrettierRules, UserOptions } from '../types'
+
+import type { FlatConfigItem, OptionsPrettier, PrettierParser, PrettierRules } from '../types'
 
 const parserPlain = {
   meta: {
@@ -35,14 +34,16 @@ const parserPlain = {
   })
 }
 
-export async function createFormatterConfig(
-  formatters?: UserOptions['formatter'],
-  prettierRules: PrettierRules = {}
-): Promise<FlatConfigItem[]> {
-  const { html = true, css = true, json = true, markdown = true, yaml = false } = formatters || {}
+export async function createFormatterConfig(options: boolean | OptionsPrettier): Promise<FlatConfigItem[]> {
+  if (options === false) return []
+
+  const opts = options as OptionsPrettier
+
+  const { html = true, css = true, json = true, markdown = true } = opts.formatters || {}
+  const prettierRules = opts.rules || {}
 
   const pluginPrettier = await interopDefault(import('eslint-plugin-prettier'))
-  const recommendedPrettier = await interopDefault(import('eslint-plugin-prettier/recommended'))
+  // const recommendedPrettier = await interopDefault(import('eslint-plugin-prettier/recommended'))
 
   function createPrettierFormatter(files: string[], parser: PrettierParser, plugins?: string[]) {
     const rules: PrettierRules = {
@@ -73,16 +74,13 @@ export async function createFormatterConfig(
   }
 
   const configs: FlatConfigItem[] = [
-    recommendedPrettier,
     {
-      name: '@anyions/shared-eslint-config/prettier/rules',
-      files: GLOB_PRETTIER_LINTS,
+      name: '@anyions/shared-eslint-config/prettier/core',
       plugins: {
         prettier: pluginPrettier
       },
       rules: {
         'prettier/prettier': ['warn', prettierRules],
-
         'arrow-body-style': 'off',
         'prefer-arrow-callback': 'off'
       }
@@ -113,10 +111,7 @@ export async function createFormatterConfig(
     configs.push(markdownConfig)
   }
 
-  if (yaml) {
-    const yamlConfig = createPrettierFormatter([GLOB_YAML], 'yaml')
-    configs.push(yamlConfig)
-  }
+  // configs.push(recommendedPrettier)
 
   return configs
 }

@@ -1,8 +1,13 @@
 import { GLOB_JSON, GLOB_JSON5, GLOB_JSONC, GLOB_PACKAGE_JSON, GLOB_TS_CONFIG, GLOB_TS_OTHER_CONFIG } from '../globs'
 import { interopDefault } from '../shared'
-import type { FlatConfigItem } from '../types'
 
-export async function createJSONConfig(): Promise<FlatConfigItem[]> {
+import type { FlatConfigItem, OptionsOverrides } from '../types'
+
+export async function createJSONConfig(options: boolean | OptionsOverrides = {}): Promise<FlatConfigItem[]> {
+  if (options === false) return []
+
+  const { files = [GLOB_JSON, GLOB_JSON5, GLOB_JSONC], overrides = {} } = options as OptionsOverrides
+
   const pluginJsonc = await interopDefault(import('eslint-plugin-jsonc'))
   const parserJsonc = await interopDefault(import('jsonc-eslint-parser'))
 
@@ -15,7 +20,7 @@ export async function createJSONConfig(): Promise<FlatConfigItem[]> {
     },
     {
       name: '@anyions/shared-eslint-config/jsonc/global/rules',
-      files: [GLOB_JSON, GLOB_JSON5, GLOB_JSONC],
+      files,
       languageOptions: {
         parser: parserJsonc
       },
@@ -45,7 +50,19 @@ export async function createJSONConfig(): Promise<FlatConfigItem[]> {
         'jsonc/no-useless-escape': 'error',
         'jsonc/space-unary-ops': 'error',
         'jsonc/valid-json-number': 'error',
-        'jsonc/vue-custom-block/no-parsing-error': 'error'
+        'jsonc/vue-custom-block/no-parsing-error': 'error',
+        //stylelistic
+        'jsonc/array-bracket-spacing': ['error', 'never'],
+        'jsonc/comma-dangle': ['error', 'never'],
+        'jsonc/comma-style': ['error', 'last'],
+        // 'jsonc/indent': ['error', prettierIndent], // use prettier to style
+        'jsonc/key-spacing': ['error', { afterColon: true, beforeColon: false }],
+        'jsonc/object-curly-newline': ['error', { consistent: true, multiline: true }],
+        'jsonc/object-curly-spacing': ['error', 'always'],
+        'jsonc/object-property-newline': ['error', { allowMultiplePropertiesPerLine: true }],
+        'jsonc/quote-props': 'error',
+        'jsonc/quotes': 'error',
+        ...overrides
       }
     },
     {

@@ -1,3 +1,4 @@
+import type { ParserOptions } from '@typescript-eslint/parser'
 import type { ESLint, Linter } from 'eslint'
 
 interface PrettierRulessRequired {
@@ -120,30 +121,22 @@ export type PrettierParser =
   | 'vue'
   | 'yaml'
 
+export type Awaitable<T> = T | Promise<T>
+
 // eslint-disable-next-line no-use-before-define
 export type LiteralUnion<T extends U, U = string> = T | (Pick<U, never> & { _?: never | undefined })
 
-export type FlatConfigParserModule = Linter.FlatConfigParserModule
+export type LinterProcessor = Linter.Processor
+
+export type FlatConfigItem = Linter.FlatConfig
+
+export type ESLintPlugin = ESLint.Plugin
 
 export interface PrettierRules extends Partial<PrettierRulessRequired> {
   parser?: LiteralUnion<PrettierParser>
 }
 
-export interface FlatConfigItem extends Linter.FlatConfig {}
-
-export interface ESLintPlugin extends ESLint.Plugin {}
-
-export interface UserOptions {
-  /**
-   * The current working directory
-   *
-   * @default process.cwd()
-   */
-  cwd: string
-  /** The globs to ignore lint */
-  ignores: string[]
-  /** The override rules */
-  overrides: FlatConfigItem['rules']
+export interface OptionsPrettier {
   /**
    * Default prettier rules
    *
@@ -168,32 +161,127 @@ export interface UserOptions {
    * }
    * ```
    */
-  prettierRules: PrettierRules
-  /**
-   * Whether to use prettierrc
-   *
-   * If true, the rules in prettierrc will override the default rules
-   *
-   * @default true
-   */
-  usePrettierrc: boolean
+  rules?: PrettierRules
   /**
    * @default
    * {
-   *  "html": true,
    *  "css": true,
+   *  "html": true,
    *  "json": true,
-   *  "markdown": true,
-   *  "yaml": false
+   *  "markdown": true
    * }
    */
-  formatter: {
-    html?: boolean
+  formatters?: {
     css?: boolean
+    html?: boolean
     json?: boolean
     markdown?: boolean
-    yaml?: false
   }
 }
 
-export { type Awaitable, type FlatConfigComposer } from 'eslint-flat-config-utils'
+export interface OptionsComponentExts {
+  /**
+   * Additional extensions for components.
+   *
+   * @example ['vue', 'ts']
+   * @default []
+   */
+  componentExts?: string[]
+}
+
+export interface OptionsOverrides {
+  files?: string[]
+  overrides?: FlatConfigItem['rules']
+}
+
+export interface OptionsMarkdown extends OptionsOverrides, OptionsComponentExts {}
+
+export interface OptionsTypeScript extends OptionsOverrides, OptionsComponentExts {
+  tsconfigPath?: string | string[]
+  parserOptions?: Partial<ParserOptions>
+  filesTypeAware?: string[]
+}
+
+export interface OptionsUnoCSS extends OptionsOverrides {
+  /**
+   * Enable attributify support.
+   * @default true
+   */
+  attributify?: boolean
+  /**
+   * Enable strict mode by throwing errors about blocklisted classes.
+   * @default false
+   */
+  strict?: boolean
+}
+
+export interface UserOptions {
+  /**
+   * The current working directory
+   *
+   * @default process.cwd()
+   */
+  cwd?: string
+  /**
+   * The globs to ignore lint
+   *
+   * @default []
+   */
+  ignores?: string[]
+  /**
+   * Enable flat git/eslint ignore support.
+   *
+   * Path to `.gitignore` files
+   * By defult, will use `'.gitignore'` and '.eslintignore' automation.
+   *
+   * @see https://github.com/antfu/eslint-config-flat-gitignore
+   *
+   * @default ['.gitignore', '.eslintignore']
+   */
+  flatignore?: string[]
+  /**
+   * Whether to use prettier to format files
+   * If true, will use default prettier options
+   * You can use `.prettierrc` to override the default prettier rules
+   *
+   * @see OptionsPrettier
+   * @default true
+   */
+  prettier?: boolean | OptionsPrettier
+  /**
+   * Javascript override rules.
+   */
+  javascript?: OptionsOverrides
+  /**
+   * Enable TypeScript support.
+   *
+   * @default auto-detect based on the dependencies
+   */
+  typescript?: boolean | OptionsTypeScript
+  /**
+   * Enable unocss rules.
+   *
+   * @default false
+   */
+  unocss?: boolean | OptionsUnoCSS
+  /**
+   * Enable Vue support.
+   *
+   * @default auto-detect based on the dependencies
+   */
+  vue?: boolean | OptionsOverrides
+  /**
+   * Enable linting for **code snippets** in Markdown.
+   *
+   * To format Markdown content, need enable `formatters.markdown`.
+   *
+   * @default true
+   */
+  markdown?: boolean | OptionsMarkdown
+  /**
+   * Enable JSONC support.
+   *
+   * @default true
+   */
+  jsonc?: boolean | OptionsOverrides
+}

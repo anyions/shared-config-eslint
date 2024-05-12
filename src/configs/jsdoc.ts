@@ -1,4 +1,5 @@
 import { interopDefault } from '../shared'
+
 import type { FlatConfigItem } from '../types'
 
 export async function createJsDocConfig(): Promise<FlatConfigItem[]> {
@@ -6,7 +7,7 @@ export async function createJsDocConfig(): Promise<FlatConfigItem[]> {
 
   return [
     {
-      name: '@shared/eslint-config/ignores/rules',
+      name: '@anyions/shared-eslint-config/ignores/rules',
       plugins: {
         jsdoc: pluginJsdoc
       },
@@ -26,6 +27,7 @@ export async function createJsDocConfig(): Promise<FlatConfigItem[]> {
         'jsdoc/require-returns-check': 'warn',
         'jsdoc/require-returns-description': 'warn',
         'jsdoc/require-yields-check': 'warn',
+        // stylelistic
         'jsdoc/check-alignment': 'warn',
         'jsdoc/multiline-blocks': 'warn'
       }

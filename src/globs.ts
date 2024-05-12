@@ -23,7 +23,10 @@ export const GLOB_JSONC = '**/*.jsonc'
 
 export const GLOB_MARKDOWN = '**/*.md'
 export const GLOB_MARKDOWN_IN_MARKDOWN = '**/*.md/*.md'
+export const GLOB_MARKDOWN_CODE = `${GLOB_MARKDOWN}/${GLOB_SRC}`
+
 export const GLOB_YAML = '**/*.y?(a)ml'
+export const GLOB_TOML = '**/*.toml'
 
 export const GLOB_PRETTIER_LINTS = [GLOB_SRC, GLOB_VUE]
 
@@ -62,6 +65,7 @@ export const GLOB_EXCLUDES = [
   '**/.vercel',
   '**/.changeset',
   '**/.idea',
+  '**/.vscode',
   '**/.cache',
   '**/.output',
   '**/.vite-inspect',

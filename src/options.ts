@@ -1,6 +1,9 @@
+import { readFile } from 'node:fs/promises'
+import path from 'node:path'
 import process from 'node:process'
 
-import { loadPrettierConfig } from './shared'
+import { isPackageExists } from './shared'
+
 import type { PrettierRules, UserOptions } from './types'
 
 const DEFAULT_PRETTIER_RULES: PrettierRules = {
@@ -21,51 +24,125 @@ const DEFAULT_PRETTIER_RULES: PrettierRules = {
   rangeStart: 0
 }
 
-export async function createOptions(options: Partial<UserOptions> = {}) {
-  const opts: UserOptions = {
+const DEFAULT_PRETTIER_FORMATTERS = {
+  html: true,
+  css: true,
+  json: true,
+  markdown: true
+}
+
+const VuePackages = ['vue', 'nuxt', 'vitepress', '@slidev/cli']
+
+async function loadPrettierConfig(cwd: string) {
+  let prettierConfig: PrettierRules = {}
+
+  try {
+    const prettierrc = await readFile(path.join(cwd, '.prettierrc'), 'utf-8')
+
+    prettierConfig = JSON.parse(prettierrc)
+  } catch {}
+
+  return prettierConfig
+}
+
+export async function createOptions(options: UserOptions = {}) {
+  const opts: Required<UserOptions> = {
     cwd: process.cwd(),
     ignores: [],
-    overrides: {},
-    prettierRules: {
-      ...DEFAULT_PRETTIER_RULES
+    prettier: {
+      rules: DEFAULT_PRETTIER_RULES,
+      formatters: DEFAULT_PRETTIER_FORMATTERS
     },
-    usePrettierrc: true,
-    formatter: {
-      html: true,
-      css: true,
-      json: true,
-      markdown: true
-    }
+    flatignore: ['.gitignore', '.eslintignore'],
+    javascript: {},
+    typescript: {},
+    vue: {},
+    unocss: { attributify: true, strict: false },
+    markdown: {},
+    jsonc: {}
   }
-  const { cwd, ignores, overrides, prettierRules, usePrettierrc, formatter } = options
 
+  const {
+    cwd,
+    ignores,
+    flatignore,
+    prettier,
+    javascript,
+    typescript = isPackageExists('typescript'),
+    unocss = false,
+    vue = VuePackages.some((i) => isPackageExists(i)),
+    markdown = true,
+    jsonc = true
+  } = options
+
+  //cwd
   if (cwd) {
     opts.cwd = cwd
   }
 
+  //ignores
   if (ignores?.length) {
     opts.ignores = [...opts.ignores, ...ignores]
   }
 
-  if (overrides) {
-    opts.overrides = overrides
+  //flatignores
+  if (typeof flatignore === 'object') {
+    opts.flatignore = [...new Set([...opts.flatignore, ...flatignore])]
   }
 
-  if (prettierRules) {
-    opts.prettierRules = { ...opts.prettierRules, ...prettierRules }
+  //prettier
+  if (typeof prettier === 'object') {
+    opts.prettier = {
+      rules: { ...DEFAULT_PRETTIER_RULES, ...prettier.rules },
+      formatters: { ...DEFAULT_PRETTIER_FORMATTERS, ...prettier.formatters }
+    }
+  } else if (prettier === false) {
+    opts.prettier = prettier
   }
 
-  if (usePrettierrc !== undefined) {
-    opts.usePrettierrc = usePrettierrc
-  }
-
-  if (opts.usePrettierrc) {
+  if (typeof opts.prettier === 'object') {
     const prettierConfig = await loadPrettierConfig(opts.cwd)
-    Object.assign(opts.prettierRules, prettierConfig)
+    Object.assign(opts.prettier!.rules!, prettierConfig)
   }
 
-  if (formatter) {
-    Object.assign(opts.formatter, formatter)
+  //javascript
+  if (typeof javascript === 'object') {
+    opts.javascript = javascript
+  }
+
+  //typescript
+  if (typeof typescript === 'object') {
+    Object.assign(opts.typescript, typescript)
+  } else if (typescript === false) {
+    opts.typescript = typescript
+  }
+
+  //unocss
+  if (typeof unocss === 'object') {
+    Object.assign(opts.unocss, unocss)
+  } else if (unocss === false) {
+    opts.unocss = unocss
+  }
+
+  //vue
+  if (typeof vue === 'object') {
+    Object.assign(opts.vue, vue)
+  } else if (vue === false) {
+    opts.vue = vue
+  }
+
+  //markdown
+  if (typeof markdown === 'object') {
+    Object.assign(opts.markdown, markdown)
+  } else if (markdown === false) {
+    opts.markdown = markdown
+  }
+
+  //jsonc
+  if (typeof jsonc === 'object') {
+    Object.assign(opts.jsonc, jsonc)
+  } else if (jsonc === false) {
+    opts.jsonc = jsonc
   }
 
   return opts

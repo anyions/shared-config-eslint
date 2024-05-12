@@ -1,4 +1,5 @@
 import { interopDefault } from '../shared'
+
 import type { FlatConfigItem } from '../types'
 
 export async function createUnicornConfig(): Promise<FlatConfigItem[]> {

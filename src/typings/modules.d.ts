@@ -4,6 +4,8 @@ declare module 'eslint-plugin-eslint-comments' {
   export default plugin
 }
 
+declare module 'eslint-plugin-markdown'
+
 declare module 'eslint-plugin-unused-imports' {
   const plugin: import('eslint').ESLint.Plugin
 

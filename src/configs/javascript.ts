@@ -2,9 +2,12 @@ import globals from 'globals'
 
 import { GLOB_SRC, GLOB_SRC_EXT, GLOB_TESTS } from '../globs'
 import { interopDefault } from '../shared'
-import type { FlatConfigItem } from '../types'
 
-export async function createJavascriptConfig(): Promise<FlatConfigItem[]> {
+import type { FlatConfigItem, OptionsOverrides } from '../types'
+
+export async function createJavascriptConfig(options: OptionsOverrides = {}): Promise<FlatConfigItem[]> {
+  const { overrides = {} } = options
+
   const pluginUnusedImports = await interopDefault(import('eslint-plugin-unused-imports'))
 
   return [
@@ -233,7 +236,9 @@ export async function createJavascriptConfig(): Promise<FlatConfigItem[]> {
             vars: 'all',
             varsIgnorePattern: '^_'
           }
-        ]
+        ],
+
+        ...overrides
       }
     },
     {

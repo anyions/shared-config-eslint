@@ -1,5 +1,5 @@
-import { GLOB_SRC_EXT } from '../globs'
 import { interopDefault } from '../shared'
+
 import type { FlatConfigItem } from '../types'
 
 export async function createImportsConfig(): Promise<FlatConfigItem[]> {
@@ -24,7 +24,7 @@ export async function createImportsConfig(): Promise<FlatConfigItem[]> {
         'import/order': [
           'error',
           {
-            groups: ['builtin', 'external', 'internal', 'parent', 'sibling', 'index', 'object'],
+            groups: ['builtin', 'external', 'internal', 'parent', 'sibling', 'index', 'object', 'type'],
             pathGroups: [
               {
                 group: 'builtin',
@@ -57,14 +57,6 @@ export async function createImportsConfig(): Promise<FlatConfigItem[]> {
             varsIgnorePattern: '^_'
           }
         ]
-      }
-    },
-    {
-      name: '@anyions/shared-eslint-config/imports/disables/bin',
-      files: ['**/bin/**/*', `**/bin.${GLOB_SRC_EXT}`],
-      rules: {
-        'antfu/no-import-dist': 'off',
-        'antfu/no-import-node-modules-by-path': 'off'
       }
     }
   ]
