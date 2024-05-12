@@ -1,7 +1,7 @@
 {
   "name": "@anyions/shared-eslint-config",
   "type": "module",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "description": "AnyIons' shared eslint config presets with prettier",
   "author": {
     "name": "AnyIons",
@@ -39,7 +39,9 @@
   "main": "dist/index.cjs",
   "module": "dist/index.js",
   "types": "dist/index.d.ts",
-  "files": ["dist"],
+  "files": [
+    "dist"
+  ],
   "engines": {
     "node": ">=14"
   },
