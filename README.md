@@ -243,6 +243,57 @@ export interface UserOptions {
 }
 ````
 
+## Plugins Renaming
+
+Since flat config requires explicitly provide the plugin names (instead of the mandatory convention from npm package name), we renamed some plugins to make the overall scope more consistent and easier to write.
+
+| New Prefix | Original Prefix | Source Plugin |
+| --- | --- | --- |
+| `import/*` | `import-x/*` | [eslint-plugin-import-x](https://github.com/un-es/eslint-plugin-import-x) |
+| `node/*` | `n/*` | [eslint-plugin-n](https://github.com/eslint-community/eslint-plugin-n) |
+| `yaml/*` | `yml/*` | [eslint-plugin-yml](https://github.com/ota-meshi/eslint-plugin-yml) |
+| `ts/*` | `@typescript-eslint/*` | [@typescript-eslint/eslint-plugin](https://github.com/typescript-eslint/typescript-eslint) |
+| `style/*` | `@stylistic/*` | [@stylistic/eslint-plugin](https://github.com/eslint-stylistic/eslint-stylistic) |
+| `test/*` | `vitest/*` | [eslint-plugin-vitest](https://github.com/veritem/eslint-plugin-vitest) |
+| `test/*` | `no-only-tests/*` | [eslint-plugin-no-only-tests](https://github.com/levibuzolic/eslint-plugin-no-only-tests) |
+
+When you want to override rules, or disable them inline, you need to update to the new prefix:
+
+```diff
+-// eslint-disable-next-line @typescript-eslint/consistent-type-definitions
++// eslint-disable-next-line ts/consistent-type-definitions
+type foo = { bar: 2 }
+```
+
+## Config Composer
+
+The function `defineConfig()` returns a [`FlatConfigComposer` object from `eslint-flat-config-utils`](https://github.com/antfu/eslint-flat-config-utils#composer) where you can chain the methods to compose the config even more flexibly.
+
+```js
+// eslint.config.js
+import defineConfig from '@anyions/shared-config-eslint'
+
+export default defineConfig()
+  .prepend(
+    // some configs before the main config
+  )
+  // overrides any named configs
+  .override(
+    'antfu/imports',
+    {
+      rules: {
+        'import/order': ['error', { 'newlines-between': 'always' }],
+      }
+    }
+  )
+  // rename plugin prefixes
+  .renamePlugins({
+    'old-prefix': 'new-prefix',
+    // ...
+  })
+// ...
+```
+
 ## Thanks
 
 **Inspired by the following projects:**
