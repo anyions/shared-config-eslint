@@ -11,7 +11,7 @@ import {
 } from '../globs'
 import { interopDefault } from '../shared'
 
-import type { FlatConfigItem, OptionsPrettier, PrettierParser, PrettierRules } from '../types'
+import type { OptionsPrettier, PrettierParser, PrettierRules, TypedFlatConfigItem } from '../types'
 
 const parserPlain = {
   meta: {
@@ -34,7 +34,7 @@ const parserPlain = {
   })
 }
 
-export async function createFormatterConfig(options: boolean | OptionsPrettier): Promise<FlatConfigItem[]> {
+export async function createFormatterConfig(options: boolean | OptionsPrettier = {}): Promise<TypedFlatConfigItem[]> {
   if (options === false) return []
 
   const opts = options as OptionsPrettier
@@ -56,8 +56,8 @@ export async function createFormatterConfig(options: boolean | OptionsPrettier):
       rules.plugins = [...(rules.plugins || []), ...plugins]
     }
 
-    const config: FlatConfigItem = {
-      name: `@anyions/shared-eslint-config/formatter-${parser}/rules`,
+    const config: TypedFlatConfigItem = {
+      name: `@anyions/shared-config-eslint/formatter-${parser}/rules`,
       files,
       languageOptions: {
         parser: parserPlain
@@ -73,9 +73,9 @@ export async function createFormatterConfig(options: boolean | OptionsPrettier):
     return config
   }
 
-  const configs: FlatConfigItem[] = [
+  const configs: TypedFlatConfigItem[] = [
     {
-      name: '@anyions/shared-eslint-config/prettier/core',
+      name: '@anyions/shared-config-eslint/prettier/core',
       plugins: {
         prettier: pluginPrettier
       },

@@ -28,8 +28,6 @@ export const GLOB_MARKDOWN_CODE = `${GLOB_MARKDOWN}/${GLOB_SRC}`
 export const GLOB_YAML = '**/*.y?(a)ml'
 export const GLOB_TOML = '**/*.toml'
 
-export const GLOB_PRETTIER_LINTS = [GLOB_SRC, GLOB_VUE]
-
 export const GLOB_PACKAGE_JSON = '**/package.json'
 
 export const GLOB_TS_CONFIG = '**/tsconfig.json'

@@ -1,11 +1,11 @@
 import process from 'node:process'
 
 import { GLOB_SRC, GLOB_TS, GLOB_TSX } from '../globs'
-import { interopDefault, renameRules, toArray } from '../shared'
+import { interopDefault, renamePluginsInRules, toArray } from '../shared'
 
-import type { FlatConfigItem, OptionsTypeScript } from '../types'
+import type { OptionsTypeScript, TypedFlatConfigItem } from '../types'
 
-export async function createTsRules(): Promise<FlatConfigItem['rules']> {
+export async function createTsRules(): Promise<TypedFlatConfigItem['rules']> {
   const pluginTs = await interopDefault(import('@typescript-eslint/eslint-plugin'))
 
   const tsRules = {
@@ -41,10 +41,12 @@ export async function createTsRules(): Promise<FlatConfigItem['rules']> {
     ]
   }
 
-  return renameRules(tsRules, { '@typescript-eslint': 'ts' })
+  return renamePluginsInRules(tsRules, { '@typescript-eslint': 'ts' })
 }
 
-export async function createTypescriptConfig(options: boolean | OptionsTypeScript = {}): Promise<FlatConfigItem[]> {
+export async function createTypescriptConfig(
+  options: boolean | OptionsTypeScript = {}
+): Promise<TypedFlatConfigItem[]> {
   if (options === false) return []
 
   const opts = options as OptionsTypeScript
@@ -58,7 +60,7 @@ export async function createTypescriptConfig(options: boolean | OptionsTypeScrip
   const pluginTs = await interopDefault(import('@typescript-eslint/eslint-plugin'))
   const parserTs = await interopDefault(import('@typescript-eslint/parser'))
 
-  const typeAwareRules: FlatConfigItem['rules'] = {
+  const typeAwareRules: TypedFlatConfigItem['rules'] = {
     'dot-notation': 'off',
 
     'no-implied-eval': 'off',
@@ -84,9 +86,9 @@ export async function createTypescriptConfig(options: boolean | OptionsTypeScrip
 
   const tsRules = await createTsRules()
 
-  function makeParser(typeAware: boolean, files: string[], ignores?: string[]): FlatConfigItem {
+  function makeParser(typeAware: boolean, files: string[], ignores?: string[]): TypedFlatConfigItem {
     return {
-      name: `@anyions/shared-eslint-config/typescript/${typeAware ? 'type-aware-parser' : 'parser'}`,
+      name: `@anyions/shared-config-eslint/typescript/${typeAware ? 'type-aware-parser' : 'parser'}`,
       files,
       ...(ignores ? { ignores } : {}),
       languageOptions: {
@@ -108,7 +110,7 @@ export async function createTypescriptConfig(options: boolean | OptionsTypeScrip
 
   return [
     {
-      name: '@anyions/shared-eslint-config/typescript/core',
+      name: '@anyions/shared-config-eslint/typescript/core',
       plugins: {
         ts: pluginTs as any
       }
@@ -117,7 +119,7 @@ export async function createTypescriptConfig(options: boolean | OptionsTypeScrip
       ? [makeParser(true, filesTypeAware), makeParser(false, files, filesTypeAware)]
       : [makeParser(false, files)]),
     {
-      name: '@anyions/shared-eslint-config/typescript/rules',
+      name: '@anyions/shared-config-eslint/typescript/rules',
       files,
       rules: {
         ...tsRules,
@@ -127,7 +129,7 @@ export async function createTypescriptConfig(options: boolean | OptionsTypeScrip
     ...(isTypeAware
       ? [
           {
-            name: '@anyions/shared-eslint-config/typescript/type-aware/rules',
+            name: '@anyions/shared-config-eslint/typescript/type-aware/rules',
             files: filesTypeAware,
             rules: {
               ...(tsconfigPath ? typeAwareRules : {}),
@@ -137,7 +139,7 @@ export async function createTypescriptConfig(options: boolean | OptionsTypeScrip
         ]
       : []),
     {
-      name: '@anyions/shared-eslint-config/typescript/disables/dts',
+      name: '@anyions/shared-config-eslint/typescript/disables/dts',
       files: ['**/*.d.ts'],
       rules: {
         'eslint-comments/no-unlimited-disable': 'off',
@@ -147,7 +149,7 @@ export async function createTypescriptConfig(options: boolean | OptionsTypeScrip
       }
     },
     {
-      name: '@anyions/shared-eslint-config/typescript/disables/cjs',
+      name: '@anyions/shared-config-eslint/typescript/disables/cjs',
       files: ['**/*.js', '**/*.cjs'],
       rules: {
         'ts/no-require-imports': 'off',

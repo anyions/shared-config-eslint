@@ -1,9 +1,9 @@
 import { GLOB_MARKDOWN, GLOB_MARKDOWN_CODE, GLOB_MARKDOWN_IN_MARKDOWN } from '../globs'
 import { interopDefault, mergeProcessors, processorPassThrough } from '../shared'
 
-import type { FlatConfigItem, OptionsMarkdown } from '../types'
+import type { OptionsMarkdown, TypedFlatConfigItem } from '../types'
 
-export async function createMarkdownConfig(options: boolean | OptionsMarkdown = {}): Promise<FlatConfigItem[]> {
+export async function createMarkdownConfig(options: boolean | OptionsMarkdown = {}): Promise<TypedFlatConfigItem[]> {
   if (options === false) return []
 
   const { componentExts = [], files = [GLOB_MARKDOWN], overrides = {} } = options as OptionsMarkdown
@@ -12,11 +12,11 @@ export async function createMarkdownConfig(options: boolean | OptionsMarkdown = 
 
   return [
     {
-      name: '@anyions/shared-eslint-config/markdown/core',
+      name: '@anyions/shared-config-eslint/markdown/core',
       plugins: { markdown }
     },
     {
-      name: '@anyions/shared-eslint-config/markdown/processor',
+      name: '@anyions/shared-config-eslint/markdown/processor',
       files,
       ignores: [GLOB_MARKDOWN_IN_MARKDOWN],
       processor: mergeProcessors([markdown.processors.markdown, processorPassThrough])
@@ -30,7 +30,7 @@ export async function createMarkdownConfig(options: boolean | OptionsMarkdown = 
           }
         }
       },
-      name: '@anyions/shared-eslint-config/markdown/rules',
+      name: '@anyions/shared-config-eslint/markdown/rules',
       rules: {
         'import/newline-after-import': 'off',
 

@@ -3,12 +3,12 @@ import { interopDefault } from '../shared'
 
 import { createTsRules } from './typescript'
 
-import type { FlatConfigItem, OptionsOverrides } from '../types'
+import type { OptionsOverrides, TypedFlatConfigItem } from '../types'
 
 export async function createVueConfig(
   options: boolean | OptionsOverrides = {},
-  tsOverrides: FlatConfigItem['rules'] = {}
-): Promise<FlatConfigItem[]> {
+  tsOverrides: TypedFlatConfigItem['rules'] = {}
+): Promise<TypedFlatConfigItem[]> {
   if (options === false) return []
 
   const { files = [GLOB_VUE], overrides = {} } = options as OptionsOverrides
@@ -23,7 +23,7 @@ export async function createVueConfig(
 
   return [
     {
-      name: '@anyions/shared-eslint-config/vue/rules',
+      name: '@anyions/shared-config-eslint/vue/rules',
       languageOptions: {
         globals: {
           computed: 'readonly',
@@ -47,7 +47,7 @@ export async function createVueConfig(
       }
     },
     {
-      name: '@anyions/shared-eslint-config/vue/rules',
+      name: '@anyions/shared-config-eslint/vue/rules',
       files,
       languageOptions: {
         parser: parserVue,

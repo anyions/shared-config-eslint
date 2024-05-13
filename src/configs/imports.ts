@@ -1,14 +1,14 @@
 import { interopDefault } from '../shared'
 
-import type { FlatConfigItem } from '../types'
+import type { TypedFlatConfigItem } from '../types'
 
-export async function createImportsConfig(): Promise<FlatConfigItem[]> {
+export async function createImportsConfig(): Promise<TypedFlatConfigItem[]> {
   const pluginImport = await interopDefault(import('eslint-plugin-import-x'))
   const pluginUnusedImports = await interopDefault(import('eslint-plugin-unused-imports'))
 
   return [
     {
-      name: `@anyions/shared-eslint-config/imports/rules`,
+      name: `@anyions/shared-config-eslint/imports/rules`,
       plugins: {
         import: pluginImport as any,
         'unused-imports': pluginUnusedImports
@@ -24,7 +24,7 @@ export async function createImportsConfig(): Promise<FlatConfigItem[]> {
         'import/order': [
           'error',
           {
-            groups: ['builtin', 'external', 'internal', 'parent', 'sibling', 'index', 'object', 'type'],
+            groups: ['builtin', 'external', 'internal', 'parent', 'sibling', 'index', 'type', 'object'],
             pathGroups: [
               {
                 group: 'builtin',
