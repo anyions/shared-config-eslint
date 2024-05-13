@@ -1,6 +1,6 @@
-# @anyions/shared-eslint-config
+# @anyions/shared-config-eslint
 
-[![NPM version](https://img.shields.io/npm/v/@anyions/shared-eslint-config?color=a1b858&label=)](https://www.npmjs.com/package/@anyions/shared-eslint-config) ![NPM License](https://img.shields.io/npm/l/%40anyions%2Fshared-eslint-config) ![Static Badge](https://img.shields.io/badge/author-AnyIons-blue)
+[![NPM version](https://img.shields.io/npm/v/@anyions/shared-config-eslint?color=a1b858&label=)](https://www.npmjs.com/package/@anyions/shared-config-eslint) ![NPM License](https://img.shields.io/npm/l/%40anyions%2Fshared-config-eslint) ![Static Badge](https://img.shields.io/badge/author-AnyIons-blue)
 
 **AnyIons' shared ESLint flat config presets with prettier.**
 
@@ -10,7 +10,7 @@
 ## Install
 
 ```bash
-npm i @anyions/shared-eslint-config
+npm i @anyions/shared-config-eslint
 ```
 
 ## Usage
@@ -21,10 +21,10 @@ npm i @anyions/shared-eslint-config
 
 - Create config file `eslint.config.js`
 
-- Import config from `@anyions/shared-eslint-config`
+- Import config from `@anyions/shared-config-eslint`
 
 ```js
-import { defineConfig } from '@anyions/eslint-config'
+import { defineConfig } from '@anyions/shared-config-eslint'
 
 export default defineConfig(
   {
@@ -34,10 +34,14 @@ export default defineConfig(
   // you can have multiple configs
   {
     files: ['**/*.ts'],
-    rules: {}
+    rules: {
+      //...
+    }
   },
   {
-    rules: {}
+    rules: {
+      //...
+    }
   }
 )
 ```

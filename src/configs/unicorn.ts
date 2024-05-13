@@ -1,13 +1,13 @@
 import { interopDefault } from '../shared'
 
-import type { FlatConfigItem } from '../types'
+import type { TypedFlatConfigItem } from '../types'
 
-export async function createUnicornConfig(): Promise<FlatConfigItem[]> {
+export async function createUnicornConfig(): Promise<TypedFlatConfigItem[]> {
   const pluginUnicorn = await interopDefault(import('eslint-plugin-unicorn'))
 
   return [
     {
-      name: '@anyions/shared-eslint-config/unicorn/rules',
+      name: '@anyions/shared-config-eslint/unicorn/rules',
       plugins: {
         unicorn: pluginUnicorn
       },

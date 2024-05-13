@@ -3,16 +3,16 @@ import globals from 'globals'
 import { GLOB_SRC, GLOB_SRC_EXT, GLOB_TESTS } from '../globs'
 import { interopDefault } from '../shared'
 
-import type { FlatConfigItem, OptionsOverrides } from '../types'
+import type { OptionsOverrides, TypedFlatConfigItem } from '../types'
 
-export async function createJavascriptConfig(options: OptionsOverrides = {}): Promise<FlatConfigItem[]> {
+export async function createJavascriptConfig(options: OptionsOverrides = {}): Promise<TypedFlatConfigItem[]> {
   const { overrides = {} } = options
 
   const pluginUnusedImports = await interopDefault(import('eslint-plugin-unused-imports'))
 
   return [
     {
-      name: `@anyions/shared-eslint-config/javascript/rules`,
+      name: `@anyions/shared-config-eslint/javascript/rules`,
       languageOptions: {
         ecmaVersion: 2022,
         globals: {
@@ -243,13 +243,13 @@ export async function createJavascriptConfig(options: OptionsOverrides = {}): Pr
     },
     {
       files: [`scripts/${GLOB_SRC}`, `cli.${GLOB_SRC_EXT}`],
-      name: '@anyions/shared-eslint-config/javascript/disables/cli',
+      name: '@anyions/shared-config-eslint/javascript/disables/cli',
       rules: {
         'no-console': 'off'
       }
     },
     {
-      name: `@anyions/shared-eslint-config/javascript/disables/test`,
+      name: `@anyions/shared-config-eslint/javascript/disables/test`,
       files: GLOB_TESTS,
       rules: {
         'no-unused-expressions': 'off'

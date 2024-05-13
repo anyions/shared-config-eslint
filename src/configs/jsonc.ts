@@ -1,9 +1,9 @@
 import { GLOB_JSON, GLOB_JSON5, GLOB_JSONC, GLOB_PACKAGE_JSON, GLOB_TS_CONFIG, GLOB_TS_OTHER_CONFIG } from '../globs'
 import { interopDefault } from '../shared'
 
-import type { FlatConfigItem, OptionsOverrides } from '../types'
+import type { OptionsOverrides, TypedFlatConfigItem } from '../types'
 
-export async function createJSONConfig(options: boolean | OptionsOverrides = {}): Promise<FlatConfigItem[]> {
+export async function createJSONConfig(options: boolean | OptionsOverrides = {}): Promise<TypedFlatConfigItem[]> {
   if (options === false) return []
 
   const { files = [GLOB_JSON, GLOB_JSON5, GLOB_JSONC], overrides = {} } = options as OptionsOverrides
@@ -13,13 +13,13 @@ export async function createJSONConfig(options: boolean | OptionsOverrides = {})
 
   return [
     {
-      name: '@anyions/shared-eslint-config/jsonc/core',
+      name: '@anyions/shared-config-eslint/jsonc/core',
       plugins: {
         jsonc: pluginJsonc as any
       }
     },
     {
-      name: '@anyions/shared-eslint-config/jsonc/global/rules',
+      name: '@anyions/shared-config-eslint/jsonc/global/rules',
       files,
       languageOptions: {
         parser: parserJsonc
@@ -66,7 +66,7 @@ export async function createJSONConfig(options: boolean | OptionsOverrides = {})
       }
     },
     {
-      name: '@anyions/shared-eslint-config/jsonc/package-json/rules',
+      name: '@anyions/shared-config-eslint/jsonc/package-json/rules',
       files: [GLOB_PACKAGE_JSON],
       rules: {
         'jsonc/sort-array-values': [
@@ -158,7 +158,7 @@ export async function createJSONConfig(options: boolean | OptionsOverrides = {})
       }
     },
     {
-      name: '@anyions/shared-eslint-config/jsonc/tsconfig-json/rules',
+      name: '@anyions/shared-config-eslint/jsonc/tsconfig-json/rules',
       files: [GLOB_TS_CONFIG, GLOB_TS_OTHER_CONFIG],
       rules: {
         'jsonc/sort-keys': [

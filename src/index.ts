@@ -13,14 +13,21 @@ import { createUnicornConfig } from './configs/unicorn'
 import { createUnocssConfig } from './configs/unocss'
 import { createVueConfig } from './configs/vue'
 import { createOptions } from './options'
-import { defaultPluginRenaming, renamePluginInConfigs } from './shared'
+import { composer, defaultPluginRenaming } from './shared'
 
-import type { Awaitable, FlatConfigItem, OptionsTypeScript, UserOptions } from './types'
+import type {
+  Awaitable,
+  ConfigNames,
+  FlatConfigComposer,
+  OptionsTypeScript,
+  TypedFlatConfigItem,
+  UserOptions
+} from './types'
 
 export default async function defineConfig(
   options: Partial<UserOptions> = {},
-  ...userConfigs: Awaitable<FlatConfigItem>[]
-): Promise<FlatConfigItem[]> {
+  ...userConfigs: Awaitable<TypedFlatConfigItem>[]
+): Promise<FlatConfigComposer<TypedFlatConfigItem, ConfigNames>> {
   const opts = await createOptions(options)
 
   const tsOverride = opts.typescript ? (opts.typescript as OptionsTypeScript).overrides : {}
@@ -64,5 +71,5 @@ export default async function defineConfig(
     ...formatter
   ]
 
-  return renamePluginInConfigs(configs, defaultPluginRenaming)
+  return composer(configs).renamePlugins(defaultPluginRenaming)
 }

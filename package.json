@@ -1,7 +1,7 @@
 {
-  "name": "@anyions/shared-eslint-config",
+  "name": "@anyions/shared-config-eslint",
   "type": "module",
-  "version": "1.0.2",
+  "version": "1.0.3",
   "description": "AnyIons' shared eslint config presets with prettier",
   "author": {
     "name": "AnyIons",
@@ -9,20 +9,20 @@
     "url": "https://github.com/anyions"
   },
   "license": "MIT",
-  "homepage": "https://github.com/anyions/shared-eslint-config",
+  "homepage": "https://github.com/anyions/shared-config-eslint",
   "repository": {
-    "url": "https://github.com/anyions/shared-eslint-config.git"
+    "url": "https://github.com/anyions/shared-config-eslint.git"
   },
   "bugs": {
-    "url": "https://github.com/anyions/shared-eslint-config/issues"
+    "url": "https://github.com/anyions/shared-config-eslint/issues"
   },
   "keywords": [
     "eslint",
     "eslint-config",
-    "eslint-config-vue",
     "eslint-config-typescript",
-    "eslint-config-prettier",
     "eslint-config-unocss",
+    "eslint-config-vue",
+    "eslint-config-prettier",
     "prettier"
   ],
   "publishConfig": {
@@ -39,16 +39,15 @@
   "main": "dist/index.cjs",
   "module": "dist/index.js",
   "types": "dist/index.d.ts",
-  "files": [
-    "dist"
-  ],
+  "files": ["dist"],
   "engines": {
     "node": ">=14"
   },
   "scripts": {
-    "build": "tsup --format esm,cjs --clean --dts",
+    "build": "pnpm typegen && tsup --format esm,cjs --clean --dts",
     "bump": "bumpp && npm -r publish --access=public",
     "clean": "pnpm rimraf node_modules dist",
+    "typegen": "esno scripts/typegen.ts",
     "lint": "pnpm eslint .",
     "lint:fix": "eslint . --cache --max-warnings 0 --fix",
     "typecheck": "tsc --noEmit --skipLibCheck"
@@ -60,7 +59,7 @@
     "@unocss/eslint-config": "^0.59.4",
     "eslint": "9.2.0",
     "eslint-config-flat-gitignore": "^0.1.5",
-    "eslint-config-prettier": "9.1.0",
+    "eslint-flat-config-utils": "^0.2.4",
     "eslint-plugin-eslint-comments": "^3.2.0",
     "eslint-plugin-import-x": "0.5.0",
     "eslint-plugin-jsdoc": "^48.2.4",
@@ -83,7 +82,7 @@
     "@typescript-eslint/parser": "7.8.0",
     "@unocss/eslint-config": "^0.59.4",
     "eslint-config-flat-gitignore": "^0.1.5",
-    "eslint-config-prettier": "9.1.0",
+    "eslint-flat-config-utils": "^0.2.4",
     "eslint-plugin-eslint-comments": "^3.2.0",
     "eslint-plugin-import-x": "0.5.0",
     "eslint-plugin-jsdoc": "^48.2.4",
@@ -105,6 +104,8 @@
     "@types/node": "20.12.10",
     "bumpp": "^9.4.1",
     "eslint": "9.2.0",
+    "eslint-typegen": "^0.2.4",
+    "esno": "^4.7.0",
     "prettier": "^3.2.5",
     "rimraf": "^5.0.5",
     "tsup": "8.0.2",

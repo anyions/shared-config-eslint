@@ -1,4 +1,4 @@
-import type { Awaitable, FlatConfigItem, LinterProcessor } from './types'
+import type { Awaitable, LinterProcessor } from './types'
 
 export const defaultPluginRenaming = {
   '@typescript-eslint': 'ts',
@@ -9,33 +9,6 @@ export const defaultPluginRenaming = {
 export async function interopDefault<T>(m: Awaitable<T>): Promise<T extends { default: infer U } ? U : T> {
   const resolved = await m
   return (resolved as any).default || resolved
-}
-
-export function renameRules(rules: Record<string, any>, map: Record<string, string>) {
-  return Object.fromEntries(
-    Object.entries(rules).map(([key, value]) => {
-      for (const [from, to] of Object.entries(map)) {
-        if (key.startsWith(`${from}/`)) return [to + key.slice(from.length), value]
-      }
-      return [key, value]
-    })
-  )
-}
-
-export function renamePluginInConfigs(configs: FlatConfigItem[], map: Record<string, string>): FlatConfigItem[] {
-  return configs.map((i) => {
-    const clone = { ...i }
-    if (clone.rules) clone.rules = renameRules(clone.rules, map)
-    if (clone.plugins) {
-      clone.plugins = Object.fromEntries(
-        Object.entries(clone.plugins).map(([key, value]) => {
-          if (key in map) return [map[key], value]
-          return [key, value]
-        })
-      )
-    }
-    return clone
-  })
 }
 
 export function mergeProcessors(processors: LinterProcessor[]): LinterProcessor {
@@ -85,3 +58,4 @@ export function toArray<T>(value: T | T[]): T[] {
 }
 
 export { isPackageExists } from '@anyions/node-pkg'
+export { composer, renamePluginsInRules } from 'eslint-flat-config-utils'

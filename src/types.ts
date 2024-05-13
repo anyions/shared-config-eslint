@@ -1,5 +1,7 @@
+import type { ConfigNames, RuleOptions } from './typesgen'
 import type { ParserOptions } from '@typescript-eslint/parser'
-import type { ESLint, Linter } from 'eslint'
+import type { Linter } from 'eslint'
+import type { FlatConfigComposer } from 'eslint-flat-config-utils'
 
 interface PrettierRulessRequired {
   /**
@@ -128,9 +130,17 @@ export type LiteralUnion<T extends U, U = string> = T | (Pick<U, never> & { _?: 
 
 export type LinterProcessor = Linter.Processor
 
-export type FlatConfigItem = Linter.FlatConfig
+export type Rules = RuleOptions
 
-export type ESLintPlugin = ESLint.Plugin
+export type TypedFlatConfigItem = Omit<Linter.FlatConfig<Linter.RulesRecord & Rules>, 'plugins'> & {
+  // Relax plugins type limitation, as most of the plugins did not have correct type info yet.
+  /**
+   * An object containing a name-value mapping of plugin names to plugin objects. When `files` is specified, these plugins are only available to the matching files.
+   *
+   * @see [Using plugins in your configuration](https://eslint.org/docs/latest/user-guide/configuring/configuration-files-new#using-plugins-in-your-configuration)
+   */
+  plugins?: Record<string, any>
+}
 
 export interface PrettierRules extends Partial<PrettierRulessRequired> {
   parser?: LiteralUnion<PrettierParser>
@@ -191,7 +201,7 @@ export interface OptionsComponentExts {
 
 export interface OptionsOverrides {
   files?: string[]
-  overrides?: FlatConfigItem['rules']
+  overrides?: TypedFlatConfigItem['rules']
 }
 
 export interface OptionsMarkdown extends OptionsOverrides, OptionsComponentExts {}
@@ -285,3 +295,5 @@ export interface UserOptions {
    */
   jsonc?: boolean | OptionsOverrides
 }
+
+export type { FlatConfigComposer, ConfigNames }

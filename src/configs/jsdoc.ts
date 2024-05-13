@@ -1,13 +1,13 @@
 import { interopDefault } from '../shared'
 
-import type { FlatConfigItem } from '../types'
+import type { TypedFlatConfigItem } from '../types'
 
-export async function createJsDocConfig(): Promise<FlatConfigItem[]> {
+export async function createJsDocConfig(): Promise<TypedFlatConfigItem[]> {
   const pluginJsdoc = await interopDefault(import('eslint-plugin-jsdoc'))
 
   return [
     {
-      name: '@anyions/shared-eslint-config/ignores/rules',
+      name: '@anyions/shared-config-eslint/ignores/rules',
       plugins: {
         jsdoc: pluginJsdoc
       },

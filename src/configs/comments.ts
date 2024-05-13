@@ -1,13 +1,13 @@
 import { interopDefault } from '../shared'
 
-import type { FlatConfigItem } from '../types'
+import type { TypedFlatConfigItem } from '../types'
 
-export async function createCommentsConfig(): Promise<FlatConfigItem[]> {
+export async function createCommentsConfig(): Promise<TypedFlatConfigItem[]> {
   const pluginComments = await interopDefault(import('eslint-plugin-eslint-comments'))
 
   return [
     {
-      name: '@anyions/shared-eslint-config/comments/rules',
+      name: '@anyions/shared-config-eslint/comments/rules',
       plugins: {
         'eslint-comments': pluginComments
       },

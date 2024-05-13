@@ -1,12 +1,12 @@
 import { GLOB_EXCLUDES } from '../globs'
 import { interopDefault } from '../shared'
 
-import type { FlatConfigItem } from '../types'
+import type { TypedFlatConfigItem } from '../types'
 
 export async function createIgnoresConfig(
   ignores: string[] = [],
   flatignores: string[] = []
-): Promise<FlatConfigItem[]> {
+): Promise<TypedFlatConfigItem[]> {
   const excludes = [...GLOB_EXCLUDES]
 
   const ignore = await interopDefault(import('eslint-config-flat-gitignore'))
@@ -18,7 +18,7 @@ export async function createIgnoresConfig(
 
   return [
     {
-      name: '@anyions/shared-eslint-config/ignores/rules',
+      name: '@anyions/shared-config-eslint/ignores/rules',
       ignores: [...excludes, ...ignores]
     }
   ]
