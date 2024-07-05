@@ -43,3 +43,6 @@ declare module 'eslint-plugin-vue' {
 
   export default plugin
 }
+
+declare module 'eslint-plugin-react-hooks'
+declare module 'eslint-plugin-react-refresh'

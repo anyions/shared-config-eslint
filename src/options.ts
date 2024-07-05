@@ -45,7 +45,7 @@ async function loadPrettierConfig(cwd: string) {
   return prettierConfig
 }
 
-export async function createOptions(options: UserOptions = {}) {
+export async function createOptions(options: UserOptions = {}): Promise<UserOptions> {
   const opts: Required<UserOptions> = {
     cwd: process.cwd(),
     ignores: [],
@@ -57,6 +57,7 @@ export async function createOptions(options: UserOptions = {}) {
     javascript: {},
     typescript: {},
     vue: {},
+    react: {},
     unocss: { attributify: true, strict: false },
     markdown: {},
     jsonc: {}
@@ -71,6 +72,7 @@ export async function createOptions(options: UserOptions = {}) {
     typescript = isPackageExists('typescript'),
     unocss = false,
     vue = VuePackages.some((i) => isPackageExists(i)),
+    react = false,
     markdown = true,
     jsonc = true
   } = options
@@ -129,6 +131,13 @@ export async function createOptions(options: UserOptions = {}) {
     Object.assign(opts.vue, vue)
   } else if (vue === false) {
     opts.vue = vue
+  }
+
+  //react
+  if (typeof react === 'object') {
+    Object.assign(opts.react, react)
+  } else if (react === false) {
+    opts.react = react
   }
 
   //markdown

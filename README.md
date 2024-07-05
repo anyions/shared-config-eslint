@@ -227,6 +227,12 @@ export interface UserOptions {
    */
   vue?: boolean | OptionsOverrides
   /**
+   * Enable React support.
+   *
+   * @default false
+   */
+  react?: boolean | OptionsOverrides
+  /**
    * Enable linting for **code snippets** in Markdown.
    *
    * To format Markdown content, need enable `formatters.markdown`.

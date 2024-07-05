@@ -8,6 +8,7 @@ import { createJSONConfig } from './configs/jsonc'
 import { createMarkdownConfig } from './configs/markdown'
 import { createNodeConfig } from './configs/node'
 import { createPerfectionistConfig } from './configs/perfectionist'
+import { createReactConfig } from './configs/react'
 import { createTypescriptConfig } from './configs/typescript'
 import { createUnicornConfig } from './configs/unicorn'
 import { createUnocssConfig } from './configs/unocss'
@@ -46,6 +47,7 @@ export default async function defineConfig(
   const unicorn = await createUnicornConfig()
   const unocss = await createUnocssConfig(opts.unocss)
   const vue = await createVueConfig(opts.vue, tsOverride)
+  const react = await createReactConfig(opts.react, tsOverride)
 
   const userResolved = await Promise.all(userConfigs)
 
@@ -63,6 +65,7 @@ export default async function defineConfig(
     ...typescript,
     ...unocss,
     ...vue,
+    ...react,
     ...json,
     ...markdown,
     //userdefined
