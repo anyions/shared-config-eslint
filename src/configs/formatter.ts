@@ -66,7 +66,7 @@ export async function createFormatterConfig(options: boolean | OptionsPrettier =
         prettier: pluginPrettier
       },
       rules: {
-        'prettier/prettier': ['warn', rules]
+        'prettier/prettier': ['warn', rules as any]
       }
     }
 
@@ -80,7 +80,7 @@ export async function createFormatterConfig(options: boolean | OptionsPrettier =
         prettier: pluginPrettier
       },
       rules: {
-        'prettier/prettier': ['warn', prettierRules],
+        'prettier/prettier': ['warn', prettierRules as any],
         'arrow-body-style': 'off',
         'prefer-arrow-callback': 'off'
       }
