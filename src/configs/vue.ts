@@ -23,7 +23,7 @@ export async function createVueConfig(
 
   return [
     {
-      name: '@anyions/shared-config-eslint/vue/rules',
+      name: '@anyions/shared-config-eslint/vue/core',
       languageOptions: {
         globals: {
           computed: 'readonly',
