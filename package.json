@@ -1,7 +1,7 @@
 {
   "name": "@anyions/shared-config-eslint",
   "type": "module",
-  "version": "1.0.6",
+  "version": "1.0.7",
   "description": "AnyIons' shared eslint config presets with prettier",
   "author": {
     "name": "AnyIons",
