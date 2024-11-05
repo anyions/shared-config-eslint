@@ -4,7 +4,7 @@
 
 **AnyIons' shared ESLint flat config presets with prettier.**
 
-- Default ESLint flat config for JavaScript, TypeScript, Vue and UnoCSS.
+- Default ESLint flat config for JavaScript, TypeScript, Vue, React and UnoCSS.
 - Use ESlint and Prettier to format HTML, CSS, LESS, SCSS, JSON, JSONC, Markdown.
 
 ## Install
